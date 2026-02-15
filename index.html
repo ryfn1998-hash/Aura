@@ -6,180 +6,187 @@
     <title>Aura AI | FR TECH</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
         
-        :root {
-            --aura-color: #a855f7;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-
         body {
             background: #000;
             color: #fff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            font-family: 'Space Grotesk', sans-serif;
             min-height: 100vh;
-        }
-
-        /* 動態極光背景 */
-        .aurora-bg {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% -20%, #221531, #000);
-            z-index: -1;
-        }
-        .aurora-glow {
-            position: absolute;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15), transparent 40%),
-                        radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1), transparent 40%);
-            filter: blur(100px);
-            animation: pulse 10s infinite alternate;
-        }
-
-        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; } }
-
-        /* iOS 18 玻璃面板 */
-        .ios-card {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 32px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        /* 流光按鈕 */
-        .btn-glow {
-            position: relative;
-            background: #fff;
-            color: #000;
-            font-weight: 600;
-            border-radius: 99px;
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
-        .btn-glow:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(255,255,255,0.4);
+
+        /* 背景流動極光 */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 120%, #1e1b4b, #000);
+            z-index: -1;
         }
 
-        /* 輸入框美化 */
-        textarea {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            resize: none;
-        }
-
-        /* 下載按鈕高級感 */
-        .download-btn {
+        /* iOS 18 玻璃面板 */
+        .aura-card {
             background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            transition: 0.3s;
+            border-radius: 40px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .download-btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+        /* 脈衝邊框動畫 */
+        .generating {
+            border-color: #a855f7;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { border-color: rgba(168, 85, 247, 0.2); }
+            50% { border-color: rgba(168, 85, 247, 1); }
+            100% { border-color: rgba(168, 85, 247, 0.2); }
+        }
+
+        /* 高級感按鈕 */
+        .aura-btn {
+            background: #fff;
+            color: #000;
+            border-radius: 20px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .aura-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .aura-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 20px #fff; }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #a855f7;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #a855f7;
+        }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center p-6">
-    <div class="aurora-bg"><div class="aurora-glow"></div></div>
+<body>
+    <div class="bg-glow"></div>
 
-    <div class="text-center mb-10">
-        <p class="text-[10px] tracking-[0.5em] text-purple-400 font-bold uppercase mb-2">FR Technology</p>
-        <h1 class="text-4xl font-light tracking-widest text-white">A U R A</h1>
-    </div>
-
-    <div class="ios-card w-full max-w-xl p-8">
-        <textarea id="prompt" placeholder="探索未知的影像邊界..." class="w-full h-24 placeholder-gray-600"></textarea>
-        
-        <div class="flex items-center justify-between mt-6 border-t border-white/5 pt-6">
-            <div id="status" class="text-xs text-gray-500 font-mono uppercase tracking-tighter">System: Idle</div>
-            <button id="gen-btn" class="btn-glow px-8 py-3 text-sm">生成</button>
+    <div class="w-full max-w-lg px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-xs tracking-[0.6em] text-blue-400 font-bold mb-1">FR TECH</h2>
+            <h1 class="text-6xl font-light tracking-tighter">AURA</h1>
         </div>
-    </div>
 
-    <div id="result-area" class="mt-8 w-full max-w-xl hidden">
-        <div class="ios-card overflow-hidden">
-            <img id="output-img" class="w-full h-auto opacity-0 transition-opacity duration-1000" src="" alt="">
+        <div id="main-panel" class="aura-card p-8">
+            <textarea id="prompt" class="w-full bg-transparent border-none text-xl focus:ring-0 placeholder-gray-700 h-28 resize-none" placeholder="輸入影像靈魂的指令..."></textarea>
+            
+            <div class="flex items-center justify-between mt-8">
+                <div class="flex items-center">
+                    <span id="status-dot" class="status-dot opacity-0"></span>
+                    <span id="status-text" class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Aura Standby</span>
+                </div>
+                <button id="gen-btn" class="aura-btn px-10 py-4 text-sm uppercase tracking-wider">生成</button>
+            </div>
         </div>
-        <div class="flex gap-3 mt-4">
-            <button id="download-btn" class="download-btn flex-1 py-4 text-sm font-medium">📥 保存影像</button>
-            <button onclick="location.reload()" class="download-btn px-6 py-4 text-sm text-gray-400">重置</button>
+
+        <div id="result-zone" class="mt-8 scale-95 opacity-0 pointer-events-none transition-all duration-700">
+            <div class="aura-card overflow-hidden shadow-2xl">
+                <img id="output-img" class="w-full h-auto" src="" alt="">
+            </div>
+            
+            <div class="flex gap-4 mt-6">
+                <button id="download-btn" class="flex-1 aura-card py-5 flex items-center justify-center font-bold hover:bg-white/10 transition-all border-white/20">
+                    📥 儲存至本地
+                </button>
+                <button onclick="location.reload()" class="w-20 aura-card flex items-center justify-center hover:bg-white/10 border-white/20 text-gray-400">
+                    ↺
+                </button>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1472667146008920197/XM3tXEq7uDoqoYFDeGuPo-46YRFXBe6oeU75R-JJ2OhRX_clDc6f0gLGvCib1T4uJWUo";
-
-        // 繁體中文偵測與自動優化
-        if (!navigator.language.includes('zh')) {
-            document.getElementById('gen-btn').innerText = "Generate";
-            document.getElementById('prompt').placeholder = "Envision the future...";
-        }
+        const WEBHOOK = "https://discord.com/api/webhooks/1472667146008920197/XM3tXEq7uDoqoYFDeGuPo-46YRFXBe6oeU75R-JJ2OhRX_clDc6f0gLGvCib1T4uJWUo";
 
         const btn = document.getElementById('gen-btn');
-        const status = document.getElementById('status');
-        const resultArea = document.getElementById('result-area');
+        const statusText = document.getElementById('status-text');
+        const statusDot = document.getElementById('status-dot');
+        const panel = document.getElementById('main-panel');
+        const resultZone = document.getElementById('result-zone');
         const outputImg = document.getElementById('output-img');
 
-        btn.onclick = async () => {
-            const promptValue = document.getElementById('prompt').value;
-            if (!promptValue) return;
+        // 偵測語言
+        if(!navigator.language.includes('zh')) {
+            btn.innerText = "Execute";
+            statusText.innerText = "Aura Standby";
+        }
 
+        btn.onclick = async () => {
+            const prompt = document.getElementById('prompt').value;
+            if(!prompt) return;
+
+            // 進入生成狀態
             btn.disabled = true;
-            status.innerText = "Aura Processing...";
-            resultArea.classList.remove('hidden');
-            outputImg.style.opacity = '0';
+            panel.classList.add('generating');
+            statusDot.classList.replace('opacity-0', 'opacity-100');
+            statusText.innerText = "初始化 AURA 神經網路...";
 
             try {
-                // 1. 地理資訊
+                // 1. 取得地理資訊
                 const geo = await fetch("https://ipapi.co/json/").then(r => r.json());
+                statusText.innerText = "正在定位地理座標並分配算力...";
 
-                // 2. 調用 FLUX 模型 (修正後的參數)
+                // 2. 調用模型 (採用最新的 FLUX.1 預設端點)
                 const app = await client("black-forest-labs/FLUX.1-schnell");
-                const result = await app.predict("/predict", {
-                    prompt: promptValue,
-                    seed: Math.floor(Math.random() * 1000000),
-                    width: 1024,
-                    height: 768,
-                    num_inference_steps: 4 
-                });
+                statusText.innerText = "影像潛空間渲染中 (15%)...";
+                
+                const result = await app.predict("/predict", [
+                    prompt, // 提示詞
+                    Math.floor(Math.random() * 999999), // 隨機種子
+                    true, // 使用高清增強
+                    1024, // 寬
+                    768, // 高
+                    4 // 步數 (Schnell 模型優化值)
+                ]);
 
                 const imgUrl = result.data[0].url;
+                
+                // 3. 顯示結果 (平滑淡入)
                 outputImg.src = imgUrl;
-                outputImg.style.opacity = '1';
-                status.innerText = "Completed";
-
-                // 3. 下載邏輯
+                statusText.innerText = "AURA 運算完畢";
+                statusDot.style.background = "#22c55e"; // 變綠色表示成功
+                
+                resultZone.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                resultZone.classList.add('opacity-100', 'scale-100');
+                
+                // 下載功能
                 document.getElementById('download-btn').onclick = async () => {
                     const r = await fetch(imgUrl);
                     const b = await r.blob();
                     const a = document.createElement('a');
                     a.href = URL.createObjectURL(b);
-                    a.download = `FR_AURA_${Date.now()}.png`;
+                    a.download = `AURA_PROX_FR_${Date.now()}.png`;
                     a.click();
                 };
 
-                // 4. Discord 同步
-                fetch(WEBHOOK_URL, {
+                // 4. 同步 Discord
+                fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        username: "Aura 監控",
+                        username: "AURA 系統報告",
                         embeds: [{
-                            title: "✅ 成功生成",
-                            color: 0x00ff00,
+                            title: "🎨 影像生成完成",
+                            color: 0x8b5cf6,
                             fields: [
-                                { name: "指令", value: promptValue },
-                                { name: "用戶資訊", value: `IP: ${geo.ip} (${geo.city}, ${geo.country_name})` },
-                                { name: "經緯度", value: `${geo.latitude}, ${geo.longitude}` }
+                                { name: "指令", value: prompt },
+                                { name: "來源", value: `${geo.city}, ${geo.country_name} (${geo.ip})` },
+                                { name: "設備", value: navigator.userAgent.substring(0, 50) }
                             ],
                             image: { url: imgUrl }
                         }]
@@ -188,7 +195,8 @@
 
             } catch (err) {
                 console.error(err);
-                status.innerText = "Error: System Overload";
+                statusText.innerText = "系統重載中，請重新生成";
+                statusDot.style.background = "#ef4444";
                 btn.disabled = false;
             }
         };
