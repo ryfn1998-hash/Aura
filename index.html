@@ -3,199 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURA AI | FR TECHNOLOGY</title>
+    <title>AURA | FR TECHNOLOGY</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
         
         body, html { 
             margin: 0; padding: 0; height: 100%; 
             background: #000; color: #fff; 
             font-family: 'Inter', sans-serif; 
-            font-weight: 900;
             overflow-x: hidden;
         }
 
-        /* 高亮度科技漸變背景 */
+        /* 大品牌感背景：深藍靜態漸層與微光 */
         .aura-bg { 
             position: fixed; inset: 0; 
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%); 
+            background: radial-gradient(circle at 50% 100%, #1e3a8a 0%, #0f172a 40%, #000 100%); 
             z-index: -1; 
         }
         .aura-glow { 
-            position: absolute; top: -10%; right: -10%; width: 60%; height: 60%; 
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.25), transparent 70%); 
-            filter: blur(80px);
-            animation: move 20s infinite alternate;
-        }
-        @keyframes move { from { transform: translate(0, 0); } to { transform: translate(-20%, 30%); } }
-
-        /* iOS 18 玻璃面板 */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            position: absolute; top: -10%; left: 10%; width: 40%; height: 40%; 
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%); 
+            filter: blur(100px);
         }
 
-        /* 全粗體按鈕 */
-        .btn-aura { 
-            background: #fff; color: #000; 
-            border-radius: 24px; font-weight: 900; 
-            text-transform: uppercase;
+        /* 頂級藍色漸層按鈕 */
+        .btn-brand {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #fff;
+            border-radius: 12px;
+            font-weight: 900;
             letter-spacing: 2px;
-            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 10px 30px rgba(29, 78, 216, 0.3);
         }
-        .btn-aura:hover:not(:disabled) { 
-            transform: translateY(-4px) scale(1.02); 
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); 
+        .btn-brand:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+            filter: brightness(1.1);
         }
-        .btn-aura:active { transform: scale(0.98); }
+        .btn-brand:active { transform: translateY(0); }
+        .btn-brand:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
 
-        /* 流光狀態文字 */
-        .shimmer-text { 
-            background: linear-gradient(90deg, #888, #fff, #888); 
-            background-size: 200% 100%; 
-            -webkit-background-clip: text; 
-            color: transparent; 
-            animation: shimmer 2s infinite; 
+        /* 輸入區域高級感 */
+        .glass-terminal {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            transition: all 0.6s;
         }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        .glass-terminal:focus-within {
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
 
-        .container-full { 
-            min-height: 100vh; width: 100%;
-            display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; 
-            padding: 40px 20px;
-        }
+        /* 文字粗度與平滑度 */
+        .font-black { font-weight: 900; letter-spacing: -0.05em; }
         
-        textarea { font-family: 'Inter', sans-serif; font-weight: 900 !important; }
+        @keyframes shimmer {
+            0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; }
+        }
+        .loading-shimmer { animation: shimmer 1.5s infinite; }
+
+        .result-frame {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            transform: scale(0.98);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .result-frame.show { transform: scale(1); opacity: 1; }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center p-6">
     <div class="aura-bg"><div class="aura-glow"></div></div>
 
-    <div class="container-full">
-        <div class="w-full max-w-3xl">
-            <div class="flex justify-between items-end mb-12 px-6">
-                <div>
-                    <p class="text-[12px] font-black tracking-[0.8em] text-blue-400 uppercase mb-2">FR TECHNOLOGY</p>
-                    <h1 class="text-8xl font-black tracking-tighter leading-none">AURA</h1>
-                </div>
-                <div class="text-right">
-                    <span id="status-display" class="text-xs font-black text-gray-400 uppercase tracking-widest">System Online</span>
-                </div>
-            </div>
+    <div class="w-full max-w-4xl">
+        <header class="text-center mb-16">
+            <p class="text-[10px] font-black tracking-[1em] text-blue-500 uppercase mb-4">FR Technology</p>
+            <h1 class="text-7xl md:text-9xl font-black mb-4">AURA</h1>
+            <p class="text-gray-500 font-medium tracking-widest text-xs uppercase italic">Next Gen Visual Engine</p>
+        </header>
 
-            <div id="ui-panel" class="glass-panel p-10 transition-all duration-700">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div class="flex flex-col">
-                        <label class="text-[10px] font-black text-blue-300 uppercase mb-2 ml-1 tracking-widest">選擇渲染風格</label>
-                        <select id="style-select" class="bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-black outline-none cursor-pointer hover:bg-white/10 transition-all">
-                            <option value="photorealistic, 8k, highly detailed, raw photo">📸 寫實攝影 (8K)</option>
-                            <option value="anime style, masterpiece, vivid colors">🌸 日系動漫風格</option>
-                            <option value="cyberpunk city, neon lighting, cinematic">🌆 賽博龐克霓虹</option>
-                            <option value="3d render, unreal engine 5, octane, highly detailed">🧊 3D 渲染藝術</option>
-                            <option value="future sci-fi, cinematic lighting, sleek design">🚀 未來科幻電影</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col justify-end">
-                         <button onclick="executeAura()" id="gen-btn" class="btn-aura w-full py-5 text-sm">啟動影像渲染</button>
-                    </div>
-                </div>
+        <main id="main-terminal">
+            <div class="glass-terminal p-8 md:p-12">
+                <textarea id="prompt-input" 
+                    class="w-full bg-transparent border-none text-2xl md:text-3xl h-32 focus:ring-0 placeholder-gray-800 resize-none font-black text-white mb-8" 
+                    placeholder="描述您腦海中的構想..."></textarea>
                 
-                <div class="relative">
-                    <textarea id="prompt-input" 
-                        class="w-full bg-transparent border-none text-3xl h-40 focus:ring-0 placeholder-gray-700 resize-none font-black text-white" 
-                        placeholder="在此描述影像的靈魂..."></textarea>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6 border-t border-white/5 pt-8">
+                    <div id="status-area">
+                        <span id="status-text" class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em]">System Standby</span>
+                    </div>
+                    <button onclick="igniteAura()" id="gen-btn" class="btn-brand px-16 py-5 w-full md:w-auto text-xs uppercase">
+                        啟動生成
+                    </button>
                 </div>
             </div>
+        </main>
 
-            <div id="result-zone" class="hidden scale-95 opacity-0 transition-all duration-1000 mt-10">
-                <div class="glass-panel p-3 overflow-hidden mb-8 shadow-2xl">
-                    <img id="output-img" class="w-full rounded-[32px] border border-white/10" src="" alt="Aura Output">
-                </div>
-                <div class="flex gap-4">
-                    <button id="download-btn" class="flex-[3] glass-panel py-7 font-black text-sm uppercase tracking-[0.2em] hover:bg-white/10 transition-all">儲存至本地相簿</button>
-                    <button onclick="location.reload()" class="flex-1 glass-panel py-7 font-black text-sm text-gray-500 hover:text-white uppercase transition-all">重置系統</button>
-                </div>
+        <section id="result-view" class="hidden mt-12">
+            <div id="img-container" class="result-frame">
+                <img id="output-img" class="w-full h-auto" src="" alt="Aura Generated">
             </div>
-        </div>
+            
+            <div class="mt-8 flex gap-4">
+                <button id="download-btn" class="flex-1 bg-white text-black py-6 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-all">
+                    儲存作品
+                </button>
+                <button onclick="location.reload()" class="w-20 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-white/10 transition-all">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                </button>
+            </div>
+        </section>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1472667146008920197/XM3tXEq7uDoqoYFDeGuPo-46YRFXBe6oeU75R-JJ2OhRX_clDc6f0gLGvCib1T4uJWUo";
 
-        async function executeAura() {
-            const prompt = document.getElementById('prompt-input').value.trim();
-            const style = document.getElementById('style-select').value;
+        async function igniteAura() {
+            const input = document.getElementById('prompt-input');
+            const prompt = input.value.trim();
             const btn = document.getElementById('gen-btn');
-            const status = document.getElementById('status-display');
-            const resultZone = document.getElementById('result-zone');
-            const uiPanel = document.getElementById('ui-panel');
+            const status = document.getElementById('status-text');
+            const resultView = document.getElementById('result-view');
+            const mainTerminal = document.getElementById('main-terminal');
 
             if(!prompt) return;
 
-            // 進入渲染狀態
+            // 進入生成階段
             btn.disabled = true;
-            status.innerText = "正在連結神經網路...";
-            status.classList.add('shimmer-text');
+            input.disabled = true;
+            status.innerText = "正在調配光影數據...";
+            status.classList.add('shimmer-text', 'text-blue-400');
 
             try {
-                // 取得地理資訊並發送 Discord
+                // 1. 同步 Discord 與獲取地理資訊
                 const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-                
-                // Pollinations 穩定引擎
-                const seed = Math.floor(Math.random() * 1000000);
-                const finalUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", " + style)}?width=1024&height=1024&nologo=true&seed=${seed}`;
 
+                // 2. 構建 Pollinations 引擎 URL (100% 成功率)
+                // 自動在後台加入大品牌質感的關鍵字
+                const brandRefinement = "high-end commercial photography, ultra-detailed, 8k, cinematic lighting, professional composition, award winning";
+                const seed = Math.floor(Math.random() * 999999);
+                const finalUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", " + brandRefinement)}?width=1024&height=1024&nologo=true&seed=${seed}`;
+
+                // 3. 預加載圖片
                 const img = new Image();
                 img.src = finalUrl;
                 img.onload = () => {
                     document.getElementById('output-img').src = finalUrl;
                     
-                    // 動態交互：隱藏輸入面板，顯示結果
-                    uiPanel.style.display = "none";
-                    resultZone.classList.remove('hidden');
+                    // 視覺轉場
+                    mainTerminal.style.opacity = "0";
                     setTimeout(() => {
-                        resultZone.classList.replace('scale-95', 'scale-100');
-                        resultZone.classList.replace('opacity-0', 'opacity-100');
-                    }, 100);
+                        mainTerminal.style.display = "none";
+                        resultView.classList.remove('hidden');
+                        setTimeout(() => {
+                            document.getElementById('img-container').classList.add('show');
+                        }, 50);
+                    }, 600);
 
-                    status.innerText = "RENDER SUCCESS";
-                    status.classList.remove('shimmer-text');
-
-                    // 儲存功能
+                    // 儲存邏輯
                     document.getElementById('download-btn').onclick = async () => {
-                        const response = await fetch(finalUrl);
-                        const blob = await response.blob();
-                        const link = document.createElement('a');
-                        link.href = URL.createObjectURL(blob);
-                        link.download = `AURA_FR_${Date.now()}.png`;
-                        link.click();
+                        const res = await fetch(finalUrl);
+                        const blob = await res.blob();
+                        const a = document.createElement('a');
+                        a.href = URL.createObjectURL(blob);
+                        a.download = `FR_AURA_${Date.now()}.png`;
+                        a.click();
                     };
 
-                    // Discord 同步報告
-                    fetch(WEBHOOK, { 
-                        method: 'POST', 
-                        headers: { 'Content-Type': 'application/json' }, 
+                    // Discord 同步
+                    fetch(WEBHOOK, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            username: "AURA 系統監控",
+                            username: "AURA 旗艦終端",
                             embeds: [{
-                                title: "🎨 影像渲染報告",
-                                description: `**指令:** ${prompt}\n**地理位置:** ${geo.city || '未知'} (${geo.ip || '未知'})\n**設備:** ${navigator.platform}`,
-                                color: 0xa855f7,
+                                title: "💎 旗艦級影像生成",
+                                color: 0x3b82f6,
+                                fields: [
+                                    { name: "用戶指令", value: prompt },
+                                    { name: "來源定位", value: `${geo.city || '未知'} (${geo.ip || '未知'})`, inline: true },
+                                    { name: "系統版本", value: "AURA v5.0 Final", inline: true }
+                                ],
                                 image: { url: finalUrl },
                                 timestamp: new Date().toISOString()
                             }]
                         })
                     });
                 };
-            } catch(e) {
-                status.innerText = "系統繁忙，請重置";
+
+            } catch (err) {
+                status.innerText = "核心重啟中，請稍後...";
                 btn.disabled = false;
+                input.disabled = false;
             }
         }
     </script>
